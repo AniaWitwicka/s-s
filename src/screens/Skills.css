@@ -4,6 +4,7 @@
   gap: 12px;
   padding: 12px;
   overflow-y: auto;
+  min-height: 0;
   flex: 1;
 }
 
@@ -37,4 +38,5 @@
 .skills-list {
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
