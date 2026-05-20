@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCharacterStore, useActiveCharacter } from './store/characterStore.js'
 import { useSkinStore } from './store/skinStore.js'
+import { useBreakpoint } from './hooks/useBreakpoint.js'
 import SkinLoader from './components/SkinLoader.jsx'
 import NavBar from './components/NavBar.jsx'
 import Overview from './screens/Overview.jsx'
@@ -17,11 +18,14 @@ import './App.css'
 
 export default function App() {
   const [screen, setScreen] = useState('overview')
-  const [modal, setModal] = useState(null) // null | 'create' | 'rest-short' | 'rest-long' | 'levelup'
+  const [modal, setModal] = useState(null)
 
   const character = useActiveCharacter()
   const { createCharacter, longRest, shortRest, applyLevelUp } = useCharacterStore()
-  const { setSkin, loadAllBuiltInSkins } = useSkinStore()
+  const { loadAllBuiltInSkins } = useSkinStore()
+  const { isMd, isLg } = useBreakpoint()
+
+  const navVariant = isLg ? 'sidebar' : isMd ? 'rail' : 'bottom'
 
   useEffect(() => {
     loadAllBuiltInSkins()
@@ -50,10 +54,7 @@ export default function App() {
             Create Your First Character
           </button>
           {modal === 'create' && (
-            <CharacterCreator
-              onClose={() => setModal(null)}
-              onCreate={handleCreateCharacter}
-            />
+            <CharacterCreator onClose={() => setModal(null)} onCreate={handleCreateCharacter} />
           )}
         </div>
       </>
@@ -73,11 +74,11 @@ export default function App() {
   return (
     <>
       <SkinLoader />
-      <div className="app-layout">
+      <div className={`app-layout app-layout--${navVariant}`}>
+        <NavBar activeScreen={screen} onNavigate={setScreen} variant={navVariant} />
         <main className="app-content">
           {screens[screen]}
         </main>
-        <NavBar activeScreen={screen} onNavigate={setScreen} />
       </div>
 
       {modal === 'create' && (

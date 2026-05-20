@@ -8,6 +8,14 @@
   flex: 1;
 }
 
+@media (min-width: 768px) {
+  .feats-screen { padding: 20px; gap: 16px; }
+}
+
+@media (min-width: 1200px) {
+  .feats-screen { padding: 24px; max-width: 720px; }
+}
+
 .panel {
   background: var(--s-bg-panel);
   border: var(--s-panel-border);

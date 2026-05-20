@@ -8,6 +8,25 @@
   flex: 1;
 }
 
+@media (min-width: 768px) {
+  .inventory-screen { padding: 20px; gap: 16px; }
+}
+
+@media (min-width: 1200px) {
+  .inventory-screen {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto auto 1fr;
+    align-items: start;
+    padding: 24px;
+    gap: 16px;
+  }
+  /* Currency + carry on left column */
+  .inventory-screen > .panel:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .carry-panel                             { grid-column: 1; grid-row: 2; }
+  .items-panel                             { grid-column: 2; grid-row: 1 / 4; }
+}
+
 .panel {
   background: var(--s-bg-panel);
   border: var(--s-panel-border);

@@ -8,6 +8,37 @@
   flex: 1;
 }
 
+/* Tablet: widen padding, bigger portrait */
+@media (min-width: 768px) {
+  .overview-screen { padding: 20px; gap: 16px; }
+  .banner-portrait { width: 88px; height: 88px; }
+  .portrait-placeholder { font-size: 36px; }
+  .character-name { font-size: 26px; }
+  .combat-stats { grid-template-columns: repeat(5, 1fr); }
+  .ability-orbs { padding: 16px; gap: 8px; }
+  .saves-list { grid-template-columns: repeat(6, 1fr); }
+}
+
+/* Desktop: 2-column layout */
+@media (min-width: 1200px) {
+  .overview-screen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-items: start;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .character-banner  { grid-column: 1 / -1; }
+  .combat-row        { grid-column: 1 / -1; }
+  .ability-orbs      { grid-column: 1 / -1; }
+  .saves-panel       { grid-column: 1; }
+  .bottom-row        { grid-column: 2; flex-direction: column; align-items: stretch; }
+  .rest-row          { grid-column: 1 / -1; }
+  .death-saves-panel { grid-column: 1 / -1; }
+}
+
 .character-banner {
   display: flex;
   gap: 12px;

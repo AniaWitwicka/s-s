@@ -8,6 +8,22 @@
   flex: 1;
 }
 
+@media (min-width: 768px) {
+  .skills-screen { padding: 20px; gap: 16px; }
+}
+
+@media (min-width: 1200px) {
+  .skills-screen { padding: 24px; }
+  /* 2-column skill list */
+  .skills-list {
+    columns: 2;
+    column-gap: 24px;
+  }
+  .skills-list .skill-row {
+    break-inside: avoid;
+  }
+}
+
 .panel {
   background: var(--s-bg-panel);
   border: var(--s-panel-border);

@@ -1,20 +1,59 @@
+/* ── Mobile: column layout, nav at bottom ── */
 .app-layout {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  width: 100%;
+}
+
+.app-layout--bottom {
+  flex-direction: column;
+  max-width: 480px;
+}
+
+/* NavBar before content on mobile (we put nav first in DOM for side layouts,
+   so on mobile push it to the end visually) */
+.app-layout--bottom .navbar { order: 2; }
+.app-layout--bottom .app-content { order: 1; }
+
+/* ── Tablet: row layout, icon rail on left ── */
+.app-layout--rail {
+  flex-direction: row;
+  max-width: 100%;
+}
+
+/* ── Desktop: row layout, labeled sidebar on left ── */
+.app-layout--sidebar {
+  flex-direction: row;
+  max-width: 100%;
 }
 
 .app-content {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
+/* ── Content width cap on very wide screens ── */
+@media (min-width: 1200px) {
+  .app-content {
+    max-width: 960px;
+  }
+
+  .app-layout--sidebar {
+    /* Center the whole thing if viewport is huge */
+    max-width: 1380px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+/* ── Empty state (no character) ── */
 .empty-state {
   flex: 1;
   display: flex;
