@@ -12,10 +12,8 @@ function injectFont(family, url) {
 }
 
 function applyVariables(variables) {
-  const root = document.documentElement
-  for (const [key, value] of Object.entries(variables)) {
-    root.style.setProperty(key, value)
-  }
+  const css = ':root {\n' + Object.entries(variables).map(([k, v]) => `  ${k}: ${v};`).join('\n') + '\n}'
+  injectCSS(css, 'active-skin-vars')
 }
 
 function injectCSS(cssText, tagId = 'active-skin-css') {
@@ -23,9 +21,16 @@ function injectCSS(cssText, tagId = 'active-skin-css') {
   if (!tag) {
     tag = document.createElement('style')
     tag.id = tagId
-    document.head.appendChild(tag)
   }
   tag.textContent = cssText
+  // Always keep custom-skin-css last so it wins the cascade
+  if (tagId === 'custom-skin-css') {
+    document.head.appendChild(tag)
+  } else if (!tag.parentNode) {
+    const customTag = document.getElementById('custom-skin-css')
+    if (customTag) document.head.insertBefore(tag, customTag)
+    else document.head.appendChild(tag)
+  }
 }
 
 async function loadAndApplySkin(skinId) {
