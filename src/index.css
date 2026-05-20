@@ -1,0 +1,87 @@
+/* Default skin variable fallbacks — always overridden by the active skin */
+:root {
+  --s-bg-page:            #0e0b2e;
+  --s-bg-panel:           #1a1550;
+  --s-bg-panel-alt:       #f5e6c8;
+  --s-bg-input:           #12103d;
+  --s-color-accent:       #c8a94a;
+  --s-color-gem:          #7c6abf;
+  --s-color-text-primary: #f5e6c8;
+  --s-color-text-panel:   #3a2200;
+  --s-color-text-muted:   #a09070;
+  --s-color-hp:           #e85d5d;
+  --s-color-spell:        #7c6abf;
+  --s-color-proficient:   #7c6abf;
+  --s-color-danger:       #e85d5d;
+  --s-color-success:      #5de8a0;
+  --s-font-display:       'Cinzel Decorative', serif;
+  --s-font-ui:            'Cinzel', serif;
+  --s-font-body:          'Cinzel', serif;
+  --s-border-width:       2px;
+  --s-border-radius:      4px;
+  --s-panel-border:       2px solid #c8a94a;
+  --s-input-border:       1px solid #c8a94a44;
+  --s-img-bg-texture:     none;
+  --s-img-panel-border:   none;
+  --s-img-ability-orb:    none;
+  --s-img-hp-shield:      none;
+  --s-img-nav-bg:         none;
+  --s-img-header-banner:  none;
+  --s-img-gem-filled:     none;
+  --s-img-gem-empty:      none;
+  --s-orb-size:           72px;
+  --s-nav-height:         60px;
+  --s-panel-padding:      16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--s-bg-page);
+  color: var(--s-color-text-primary);
+  font-family: var(--s-font-body);
+  background-image: var(--s-img-bg-texture);
+  background-size: cover;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--s-font-ui);
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: var(--s-font-body);
+  background: var(--s-bg-input);
+  color: var(--s-color-text-primary);
+  border: var(--s-input-border);
+  border-radius: var(--s-border-radius);
+  padding: 6px 10px;
+  width: 100%;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 1px solid var(--s-color-accent);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--s-color-accent); opacity: 0.5; border-radius: 3px; }

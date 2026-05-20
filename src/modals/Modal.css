@@ -1,0 +1,130 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  padding: 0;
+}
+
+@media (min-width: 480px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 16px;
+  }
+}
+
+.modal-box {
+  background: var(--s-bg-panel);
+  border: var(--s-panel-border);
+  border-radius: var(--s-border-radius) var(--s-border-radius) 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  .modal-box {
+    border-radius: var(--s-border-radius);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px var(--s-panel-padding);
+  border-bottom: var(--s-panel-border);
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-family: var(--s-font-ui);
+  font-size: 15px;
+  color: var(--s-color-accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal-close {
+  font-size: 16px;
+  color: var(--s-color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.modal-close:hover { color: var(--s-color-accent); }
+
+.step-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--s-color-gem);
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.step-dot.active {
+  background: var(--s-color-accent);
+  border-color: var(--s-color-accent);
+}
+
+.step-dot.done {
+  background: var(--s-color-gem);
+  border-color: var(--s-color-gem);
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--s-panel-padding);
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px var(--s-panel-padding);
+  border-top: var(--s-panel-border);
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 9px 18px;
+  border: var(--s-panel-border);
+  border-radius: var(--s-border-radius);
+  font-family: var(--s-font-ui);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--s-color-text-primary);
+  background: var(--s-bg-input);
+  transition: background 0.15s;
+}
+
+.btn:hover { background: var(--s-bg-panel); }
+
+.btn-accent {
+  color: var(--s-color-accent);
+  border-color: var(--s-color-accent);
+}
+
+.btn-accent:hover {
+  background: var(--s-color-accent);
+  color: var(--s-bg-page);
+}

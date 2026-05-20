@@ -1,0 +1,45 @@
+.journal-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.panel {
+  background: var(--s-bg-panel);
+  border: var(--s-panel-border);
+  border-radius: var(--s-border-radius);
+  padding: var(--s-panel-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.note-label {
+  font-size: 11px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.note-input {
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 60px;
+  font-family: var(--s-font-body);
+}
+
+.note-input-short {
+  min-height: 48px;
+  font-size: 13px;
+}

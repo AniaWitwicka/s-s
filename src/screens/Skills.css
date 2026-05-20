@@ -1,0 +1,40 @@
+.skills-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.panel {
+  background: var(--s-bg-panel);
+  border: var(--s-panel-border);
+  border-radius: var(--s-border-radius);
+  padding: var(--s-panel-padding);
+}
+
+.passive-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passive-label {
+  font-size: 12px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.passive-value {
+  font-size: 24px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-accent);
+}
+
+.skills-list {
+  flex: 1;
+  overflow-y: auto;
+}

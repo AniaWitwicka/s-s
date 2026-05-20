@@ -1,0 +1,64 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+}
+
+.app-title {
+  font-family: var(--s-font-display);
+  font-size: 32px;
+  color: var(--s-color-accent);
+  text-align: center;
+  margin: 0;
+}
+
+.app-subtitle {
+  font-family: var(--s-font-ui);
+  font-size: 13px;
+  color: var(--s-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 0;
+}
+
+.create-first-btn {
+  margin-top: 24px;
+  padding: 14px 28px;
+  border: 2px solid var(--s-color-accent);
+  border-radius: var(--s-border-radius);
+  font-family: var(--s-font-ui);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--s-color-accent);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.create-first-btn:hover {
+  background: var(--s-color-accent);
+  color: var(--s-bg-page);
+}

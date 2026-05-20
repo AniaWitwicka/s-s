@@ -1,0 +1,75 @@
+.rest-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rest-reset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--s-bg-input);
+  border-radius: var(--s-border-radius);
+}
+
+.rest-reset-label {
+  font-size: 13px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-text-muted);
+}
+
+.rest-reset-value {
+  font-size: 13px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-success);
+}
+
+.short-rest-info {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sr-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--s-bg-input);
+  border-radius: var(--s-border-radius);
+  padding: 10px;
+}
+
+.sr-label {
+  font-size: 10px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sr-value {
+  font-size: 18px;
+  font-family: var(--s-font-ui);
+  color: var(--s-color-text-primary);
+}
+
+.sr-roll-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sr-roll-btn {
+  font-size: 14px;
+  padding: 12px 24px;
+}
+
+.sr-gained {
+  font-size: 13px;
+  color: var(--s-color-text-primary);
+  font-family: var(--s-font-body);
+}
