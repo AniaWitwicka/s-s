@@ -57,7 +57,7 @@
   border-radius: 3px;
   font-size: 11px;
   color: var(--s-color-accent);
-  font-family: monospace;
+  font-family: var(--s-font-code);
 }
 
 .char-list {
@@ -158,6 +158,8 @@
   border: 1px solid currentColor;
 }
 
+/* Skin preview swatches — intentionally hardcoded to show what each skin
+   looks like regardless of which skin is currently active. */
 .skin-preview-default {
   background: linear-gradient(135deg, #0e0b2e 50%, #1a1550 100%);
   border-color: #c8a94a;
@@ -189,17 +191,13 @@
 
 /* Custom CSS */
 .custom-css-input {
-  font-family: monospace;
+  font-family: var(--s-font-code);
   font-size: 12px;
   line-height: 1.5;
   resize: vertical;
   min-height: 120px;
 }
 
-.css-actions {
-  display: flex;
-  gap: 8px;
-}
 
 .var-reference {
   border-top: var(--s-panel-border);
@@ -216,7 +214,7 @@
 }
 
 .var-list {
-  font-family: monospace;
+  font-family: var(--s-font-code);
   font-size: 11px;
   color: var(--s-color-text-muted);
   line-height: 1.6;

@@ -17,10 +17,12 @@
   --s-font-display:       'Cinzel Decorative', serif;
   --s-font-ui:            'Cinzel', serif;
   --s-font-body:          'Cinzel', serif;
+  --s-font-code:          ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
   --s-border-width:       2px;
   --s-border-radius:      4px;
   --s-panel-border:       2px solid #c8a94a;
   --s-input-border:       1px solid #c8a94a44;
+  --s-overlay-bg:         rgba(0, 0, 0, 0.72);
   --s-img-bg-texture:     none;
   --s-img-panel-border:   none;
   --s-img-ability-orb:    none;
@@ -85,3 +87,20 @@ input:focus, textarea:focus, select:focus {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--s-color-accent); opacity: 0.5; border-radius: 3px; }
+
+/*
+  Global border-image support.
+  When --s-img-panel-border is set to a URL by a skin, all .panel elements
+  automatically use it as a border-image. When it is 'none' (default),
+  border-image-source: none is a no-op and the regular border: var(--s-panel-border) shows.
+  Skin creators: set border-image-slice / border-image-width in their skin.css to taste.
+*/
+.panel,
+.stat-box,
+.hp-shield,
+.orb-body {
+  border-image-source: var(--s-img-panel-border);
+  border-image-slice: 20 fill;
+  border-image-width: 1;
+  border-image-repeat: stretch;
+}

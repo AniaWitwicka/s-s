@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useCharacterStore, useActiveCharacter } from '../store/characterStore.js'
 import { useSkinStore } from '../store/skinStore.js'
 import './Settings.css'
@@ -11,12 +11,32 @@ const SKIN_DESCS = {
   minimal: 'Clean light system fonts',
 }
 
+function useDebounce(fn, delay) {
+  const timer = useRef(null)
+  return useCallback((...args) => {
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => fn(...args), delay)
+  }, [fn, delay])
+}
+
 export default function Settings({ onCreateCharacter }) {
   const character = useActiveCharacter()
   const { characters, setActive, deleteCharacter, importCharacter } = useCharacterStore()
   const { activeSkinId, setSkin, customCSS, setCustomCSS } = useSkinStore()
   const [cssInput, setCssInput] = useState(customCSS)
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  const debouncedSetCSS = useDebounce(setCustomCSS, 400)
+
+  const handleCSSChange = (e) => {
+    setCssInput(e.target.value)
+    debouncedSetCSS(e.target.value)
+  }
+
+  const handleClearCSS = () => {
+    setCssInput('')
+    setCustomCSS('')
+  }
 
   const handleExport = () => {
     if (!character) return
@@ -50,8 +70,6 @@ export default function Settings({ onCreateCharacter }) {
     deleteCharacter(character.id)
     setConfirmDelete(false)
   }
-
-  const applyCustomCSS = () => setCustomCSS(cssInput)
 
   return (
     <div className="settings-screen">
@@ -108,24 +126,27 @@ export default function Settings({ onCreateCharacter }) {
         </div>
       </div>
 
-      {/* Custom CSS */}
+      {/* Custom CSS — live injection, AO3-style */}
       <div className="panel">
         <h3 className="panel-title">Custom Skin CSS</h3>
         <p className="panel-help">
-          Paste custom CSS to override any skin. Target CSS variables like <code>--s-bg-page</code>, <code>--s-color-accent</code>, etc.
+          Paste CSS and it applies instantly — no button needed. Share skins by posting this code block anywhere.
+          Target CSS variables like <code>--s-bg-page</code>, <code>--s-color-accent</code>, or any class name.
         </p>
         <textarea
           className="custom-css-input"
           value={cssInput}
-          onChange={e => setCssInput(e.target.value)}
-          placeholder=":root { --s-color-accent: #ff6b6b; }"
-          rows={8}
+          onChange={handleCSSChange}
+          placeholder=":root {&#10;  --s-color-accent: #ff6b6b;&#10;  --s-bg-page: #1a0a0a;&#10;}"
+          rows={10}
           spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
-        <div className="css-actions">
-          <button className="action-btn accent" onClick={applyCustomCSS}>Apply CSS</button>
-          <button className="action-btn" onClick={() => { setCssInput(''); setCustomCSS('') }}>Clear</button>
-        </div>
+        {cssInput && (
+          <button className="action-btn" onClick={handleClearCSS}>Clear CSS</button>
+        )}
 
         <details className="var-reference">
           <summary>CSS Variable Reference</summary>
@@ -159,29 +180,31 @@ const CSS_VAR_REFERENCE = `/* Page & panels */
 --s-color-proficient
 --s-color-danger
 --s-color-success
+--s-overlay-bg       /* modal backdrop */
 
 /* Typography */
 --s-font-display     /* character name, headings */
 --s-font-ui          /* labels, titles */
 --s-font-body        /* descriptions, notes */
+--s-font-code        /* code / CSS textarea */
 
 /* Borders & shape */
 --s-border-width
 --s-border-radius
---s-panel-border
+--s-panel-border     /* e.g. "2px solid gold" */
 --s-input-border
 
-/* Images (url(...) or none) */
---s-img-bg-texture
---s-img-panel-border
---s-img-ability-orb
---s-img-hp-shield
---s-img-nav-bg
+/* Images — set to url('...') or none */
+--s-img-bg-texture   /* full-page background */
+--s-img-panel-border /* ornate frame via border-image */
+--s-img-ability-orb  /* behind ability score circles */
+--s-img-hp-shield    /* behind HP display */
+--s-img-nav-bg       /* nav bar background */
 --s-img-header-banner
 --s-img-gem-filled
 --s-img-gem-empty
 
 /* Components */
---s-orb-size         /* ability orb diameter, default 72px */
---s-nav-height       /* nav bar height, default 60px */
+--s-orb-size         /* ability orb diameter (default 72px) */
+--s-nav-height       /* nav bar height (default 60px) */
 --s-panel-padding    /* panel internal padding */`
