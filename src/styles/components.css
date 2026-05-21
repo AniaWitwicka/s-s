@@ -97,20 +97,28 @@
   min-width:           72px;
 }
 
+.hp-shield__values {
+  display:     flex;
+  align-items: baseline;
+  justify-content: center;
+  gap:         0.2rem;
+}
+
 .hp-shield__current {
   font-family: var(--s-font-display);
   font-size:   var(--s-font-size-xl);
   color:       var(--s-color-hp);
-  display:     block;
+  line-height: 1;
 }
 
 .hp-shield__max {
   font-family: var(--s-font-ui);
-  font-size:   var(--s-font-size-xs);
-  color:       var(--s-color-text-muted);
+  font-size:   var(--s-font-size-md);
+  color:       var(--s-color-text-primary);
 }
 
 .hp-shield__temp {
+  display:     block;
   font-family: var(--s-font-ui);
   font-size:   var(--s-font-size-xs);
   color:       var(--s-color-spell);
