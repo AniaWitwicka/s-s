@@ -97,18 +97,17 @@
   min-width:           72px;
 }
 
-.hp-shield__values {
-  display:     flex;
-  align-items: baseline;
-  justify-content: center;
-  gap:         0.2rem;
+.hp-shield__value {
+  display:     block;
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-lg);
+  color:       var(--s-color-hp);
 }
 
 .hp-shield__current {
   font-family: var(--s-font-display);
   font-size:   var(--s-font-size-lg);
   color:       var(--s-color-hp);
-  line-height: 1;
 }
 
 .hp-shield__max {
