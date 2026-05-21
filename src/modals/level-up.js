@@ -1,6 +1,7 @@
 import { store } from '../store.js'
 import { getHitDie, getAverageHPGain } from '../engine/leveling.js'
 import { getModifier } from '../engine/abilities.js'
+import { getSpellSlots, isSpellcaster } from '../engine/spells.js'
 import { data } from '../engine/data/loader.js'
 
 function close() {
@@ -19,6 +20,15 @@ function resolveClasses(char) {
     return char.meta.classes
   }
   return [{ name: char.meta.class || 'Fighter', level: Number(char.meta.level) || 1 }]
+}
+
+// Features the character gains for className at classLevel (base class, no subclass)
+function featuresGained(className, classLevel) {
+  return data.features.filter(f =>
+    f.class?.index === className.toLowerCase() &&
+    f.level === classLevel &&
+    !f.subclass
+  )
 }
 
 export function open() {
@@ -82,14 +92,7 @@ export function open() {
     const avgGain       = getAverageHPGain(name)
     const conMod        = getModifier(Number(char.abilities.con) || 10)
     const conLabel      = conMod >= 0 ? `+${conMod}` : `${conMod}`
-
-    // Features for this class at this exact level (base class only, no subclass)
-    const classIndex = name.toLowerCase()
-    const features   = data.features.filter(f =>
-      f.class?.index === classIndex &&
-      f.level === newClassLevel &&
-      !f.subclass
-    )
+    const features      = featuresGained(name, newClassLevel)
 
     const featuresHtml = features.length ? `
       <div style="margin-top:var(--s-gap-md)">
@@ -203,7 +206,7 @@ export function open() {
       const { name: cls, currentLevel } = chosenClass
       const newClassLevel = currentLevel + 1
 
-      // Build updated classes array
+      // ── 1. Update classes array ──
       const updated = [...currentClasses]
       const idx = updated.findIndex(c => c.name === cls)
       if (idx >= 0) {
@@ -213,14 +216,43 @@ export function open() {
       }
 
       const newTotal = updated.reduce((sum, c) => sum + c.level, 0)
-      // Primary class = the one with highest level (first wins ties)
+      // Primary class = highest level (first wins ties)
       const primary  = updated.reduce((a, b) => b.level > a.level ? b : a)
 
-      store.updateCharacterPath('meta.classes', updated)
-      store.updateCharacterPath('meta.level',   newTotal)
-      store.updateCharacterPath('meta.class',   primary.name)
-      store.updateCharacterPath('hp.max',     char.hp.max + hpGain)
-      store.updateCharacterPath('hp.current', char.hp.current + hpGain)
+      // ── 2. Write gained features to char.feats ──
+      const gained   = featuresGained(cls, newClassLevel)
+      const existing = new Set((char.feats ?? []).map(f => f.index).filter(Boolean))
+      const newFeats = gained
+        .filter(f => !existing.has(f.index))
+        .map(f => ({
+          index: f.index,
+          name:  f.name,
+          desc:  f.desc?.join('\n\n') ?? '',
+        }))
+
+      // ── 3. Auto-sync spell slots for the primary (highest-level) class ──
+      let newSpellSlots = char.spellSlots
+      if (isSpellcaster(primary.name)) {
+        const slots = getSpellSlots(primary.name, newTotal)
+        if (Array.isArray(slots)) {
+          newSpellSlots = { ...char.spellSlots }
+          for (let i = 1; i <= 9; i++) {
+            newSpellSlots[i] = {
+              max:  slots[i] ?? 0,
+              used: newSpellSlots[i]?.used ?? 0,
+            }
+          }
+        }
+      }
+
+      // ── Commit everything ──
+      store.updateCharacterPath('meta.classes',  updated)
+      store.updateCharacterPath('meta.level',    newTotal)
+      store.updateCharacterPath('meta.class',    primary.name)
+      store.updateCharacterPath('hp.max',        char.hp.max + hpGain)
+      store.updateCharacterPath('hp.current',    char.hp.current + hpGain)
+      store.updateCharacterPath('feats',         [...(char.feats ?? []), ...newFeats])
+      store.updateCharacterPath('spellSlots',    newSpellSlots)
 
       close()
       rerender()
