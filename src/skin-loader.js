@@ -35,12 +35,10 @@ export async function loadSkin(skinIdOrUrl) {
   //   - a remote URL:     'https://raw.githubusercontent.com/.../skin.json'
 
   const isRemote = skinIdOrUrl.startsWith('http')
-  const skinUrl  = isRemote
-    ? skinIdOrUrl
-    : `/skins/${skinIdOrUrl}/skin.json`
   const basePath = isRemote
-    ? skinIdOrUrl.replace(/\/skin\.json$/, '')  // strip filename → base URL
+    ? skinIdOrUrl.replace(/\/skin\.json$/, '')  // strip /skin.json if present → base URL
     : `/skins/${skinIdOrUrl}`
+  const skinUrl  = `${basePath}/skin.json`      // always append — works for both local and remote
 
   const res = await fetch(skinUrl)
   if (!res.ok) throw new Error(`Skin not found at "${skinUrl}" (${res.status})`)
