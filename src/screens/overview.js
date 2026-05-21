@@ -27,7 +27,7 @@ export function render(container) {
         </div>
         <div class="overview__meta">
           <span class="meta-tag">${char.meta.race}</span>
-          <span class="meta-tag">${char.meta.class}${char.meta.subclass ? ' · ' + char.meta.subclass : ''}</span>
+          <span class="meta-tag">${_classLabel(char)}</span>
           <span class="meta-tag">Level ${char.meta.level}</span>
           <span class="meta-tag">${char.meta.background}</span>
         </div>
@@ -151,4 +151,16 @@ function attach(container, char) {
       render(container)
     })
   })
+}
+
+// Build the class label for the header meta tag
+// Single class:   "Barbarian · Berserker"
+// Multiclass:     "Barbarian 3 / Paladin 1"
+function _classLabel(char) {
+  const classes = char.meta.classes
+  if (!Array.isArray(classes) || classes.length <= 1) {
+    // Single class — show subclass if set
+    return char.meta.class + (char.meta.subclass ? ' · ' + char.meta.subclass : '')
+  }
+  return classes.map(c => `${c.name} ${c.level}`).join(' / ')
 }

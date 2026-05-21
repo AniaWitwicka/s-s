@@ -9,11 +9,12 @@ function expandToRawUrl(input) {
   // Already a raw URL — leave it alone
   if (input.startsWith('https://raw.githubusercontent.com')) return input
 
-  // GitHub blob URL pasted by mistake — convert to raw
+  // GitHub blob or tree URL — convert to raw
   if (input.startsWith('https://github.com')) {
     return input
       .replace('https://github.com', 'https://raw.githubusercontent.com')
       .replace('/blob/', '/')
+      .replace('/tree/', '/')         // folder view uses /tree/ instead of /blob/
       .replace(/\/skin\.json$/, '')   // basePath handles appending /skin.json
   }
 

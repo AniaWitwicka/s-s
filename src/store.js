@@ -23,6 +23,7 @@ export function createCharacter(overrides = {}) {
       alignment: 'Neutral',
       level: 1,
       xp: 0,
+      classes: [],  // [{name:'Fighter', level:1}] — populated / updated via Level Up
     },
     abilities: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
     savingThrows: { str: false, dex: false, con: false, int: false, wis: false, cha: false },
@@ -194,7 +195,11 @@ function _sanitizeCharacter(c) {
   return {
     ...defaults,
     ...c,
-    meta:        { ...defaults.meta,        ...(c.meta        ?? {}) },
+    meta:        {
+      ...defaults.meta,
+      ...(c.meta ?? {}),
+      classes: Array.isArray(c.meta?.classes) ? c.meta.classes : [],
+    },
     abilities:   { ...defaults.abilities,   ...(c.abilities   ?? {}) },
     savingThrows:{ ...defaults.savingThrows,...(c.savingThrows ?? {}) },
     skills:      { ...defaults.skills,      ...(c.skills      ?? {}) },

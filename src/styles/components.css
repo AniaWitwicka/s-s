@@ -345,3 +345,34 @@ label {
   display:     block;
   margin-bottom: 0.25rem;
 }
+
+/* ── Level-up modal class picker ─────────────────────────────────────────── */
+.levelup__class-btn {
+  display:        flex;
+  justify-content: space-between;
+  align-items:    center;
+  padding:        var(--s-gap-sm) var(--s-gap-md);
+  text-align:     left;
+  width:          100%;
+}
+
+.levelup__class-name {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-md);
+  color:       var(--s-color-accent);
+}
+
+.levelup__class-level {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+}
+
+.levelup__section-label {
+  font-family:    var(--s-font-ui);
+  font-size:      var(--s-font-size-xs);
+  color:          var(--s-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom:  var(--s-gap-sm);
+}
