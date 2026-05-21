@@ -124,6 +124,14 @@
   color:       var(--s-color-spell);
 }
 
+.hp-shield__label {
+  display:     block;
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+  white-space: nowrap;
+}
+
 /* ── Stat badge ─────────────────────────────────────────────────────────── */
 .stat-badge {
   background-image:    var(--s-img-stat-badge);

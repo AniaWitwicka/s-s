@@ -6,6 +6,7 @@ export function hpShield({ current, max, temp }) {
         <span class="hp-shield__max">/ ${max}</span>
       </div>
       ${temp ? `<span class="hp-shield__temp">+${temp} temp</span>` : ''}
+      <span class="hp-shield__label">Hit Points</span>
     </div>
   `
 }
