@@ -1,1 +1,144 @@
-/* TODO */
+/* Modal overlay + container */
+.modal-overlay {
+  position:         fixed;
+  inset:            0;
+  background:       rgba(0, 0, 0, 0.7);
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  padding:          var(--s-gap-md);
+  z-index:          200;
+}
+
+.modal {
+  background-image: var(--s-img-modal-bg);
+  background-color: var(--s-bg-panel);
+  border:           var(--s-panel-border);
+  border-image:     var(--s-img-modal-frame) 30 stretch;
+  border-radius:    var(--s-border-radius);
+  padding:          var(--s-gap-lg);
+  width:            100%;
+  max-width:        480px;
+  max-height:       90vh;
+  overflow-y:       auto;
+  display:          flex;
+  flex-direction:   column;
+  gap:              var(--s-gap-md);
+  position:         relative;
+}
+
+.modal__title {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-lg);
+  color:       var(--s-color-accent);
+  text-align:  center;
+}
+
+.modal__close {
+  position:   absolute;
+  top:        var(--s-gap-sm);
+  right:      var(--s-gap-sm);
+  background: transparent;
+  border:     none;
+  color:      var(--s-color-text-muted);
+  font-size:  var(--s-font-size-lg);
+  cursor:     pointer;
+  line-height: 1;
+}
+
+.modal__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--s-gap-md);
+}
+
+.modal__footer {
+  display:         flex;
+  justify-content: flex-end;
+  gap:             var(--s-gap-sm);
+}
+
+/* ── Level-up wizard ────────────────────────────────────────────────────── */
+.level-up__step-indicator {
+  display:         flex;
+  justify-content: center;
+  gap:             var(--s-gap-sm);
+  margin-bottom:   var(--s-gap-sm);
+}
+
+.level-up__step-dot {
+  width:            8px;
+  height:           8px;
+  border-radius:    50%;
+  background-color: var(--s-color-text-muted);
+}
+
+.level-up__step-dot--active {
+  background-color: var(--s-color-accent);
+}
+
+.level-up__hp-roll {
+  display:     flex;
+  align-items: center;
+  gap:         var(--s-gap-sm);
+}
+
+/* ── Rest modal ─────────────────────────────────────────────────────────── */
+.rest-options {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--s-gap-sm);
+}
+
+.rest-option {
+  display:        flex;
+  flex-direction: column;
+  gap:            0.25rem;
+}
+
+.rest-option__title {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-sm);
+  color:       var(--s-color-accent);
+}
+
+.rest-option__desc {
+  font-family: var(--s-font-body);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+  line-height: 1.4;
+}
+
+/* ── Rules lookup drawer ────────────────────────────────────────────────── */
+.rules-drawer {
+  position:   fixed;
+  bottom:     var(--s-nav-height);
+  left:       0;
+  right:      0;
+  max-height: 60vh;
+  overflow-y: auto;
+  background-color: var(--s-bg-panel);
+  border-top: var(--s-panel-border);
+  padding:    var(--s-gap-md);
+  z-index:    150;
+  transform:  translateY(100%);
+  transition: transform 0.25s ease;
+}
+
+.rules-drawer--open {
+  transform: translateY(0);
+}
+
+.rules-drawer__title {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-md);
+  color:       var(--s-color-accent);
+  margin-bottom: var(--s-gap-sm);
+}
+
+.rules-drawer__body {
+  font-family: var(--s-font-body);
+  font-size:   var(--s-font-size-sm);
+  color:       var(--s-color-text-primary);
+  line-height: 1.6;
+}

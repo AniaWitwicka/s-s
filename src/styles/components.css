@@ -1,1 +1,332 @@
-/* TODO */
+/* RULE: no hardcoded colours, fonts, or images — use --s-* variables only */
+
+/* ── Panel ─────────────────────────────────────────────────────────────── */
+.panel {
+  background:    var(--s-bg-panel);
+  border:        var(--s-panel-border);
+  border-image:  var(--s-img-panel-frame) 30 stretch;
+  border-radius: var(--s-border-radius);
+  padding:       var(--s-panel-padding);
+}
+
+.panel--alt {
+  background: var(--s-bg-panel-alt);
+  color:      var(--s-color-text-panel);
+}
+
+.panel--sm {
+  padding: var(--s-gap-sm);
+}
+
+/* ── Name banner ────────────────────────────────────────────────────────── */
+.name-banner {
+  background-image:    var(--s-img-name-banner);
+  background-size:     contain;
+  background-repeat:   no-repeat;
+  background-position: center;
+  background-color:    var(--s-bg-panel);
+  border:              var(--s-panel-border);
+  border-radius:       var(--s-border-radius);
+  padding:             var(--s-gap-sm) var(--s-gap-md);
+  text-align:          center;
+}
+
+.name-banner__name {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-xl);
+  color:       var(--s-color-accent);
+  display:     block;
+}
+
+/* ── Ability orb ────────────────────────────────────────────────────────── */
+.ability-orb {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            0.25rem;
+  cursor:         pointer;
+  user-select:    none;
+}
+
+.ability-orb__frame {
+  width:            var(--s-orb-size);
+  height:           var(--s-orb-size);
+  background-image: var(--s-img-ability-orb);
+  background-size:  cover;
+  background-color: var(--s-bg-panel-alt);
+  border:           var(--s-panel-border);
+  border-radius:    50%;
+  display:          flex;
+  flex-direction:   column;
+  align-items:      center;
+  justify-content:  center;
+  line-height:      1;
+}
+
+.ability-orb__score {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-lg);
+  color:       var(--s-color-text-panel);
+}
+
+.ability-orb__mod {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+}
+
+.ability-orb__label {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-primary);
+  letter-spacing: 0.05em;
+}
+
+/* ── HP shield ──────────────────────────────────────────────────────────── */
+.hp-shield {
+  background-image:    var(--s-img-hp-shield);
+  background-size:     contain;
+  background-repeat:   no-repeat;
+  background-position: center;
+  background-color:    var(--s-bg-panel);
+  border:              var(--s-panel-border);
+  border-radius:       var(--s-border-radius);
+  padding:             var(--s-gap-sm);
+  text-align:          center;
+  cursor:              pointer;
+  min-width:           72px;
+}
+
+.hp-shield__current {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-xl);
+  color:       var(--s-color-hp);
+  display:     block;
+}
+
+.hp-shield__max {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+}
+
+.hp-shield__temp {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-spell);
+}
+
+/* ── Stat badge ─────────────────────────────────────────────────────────── */
+.stat-badge {
+  background-image:    var(--s-img-stat-badge);
+  background-size:     cover;
+  background-color:    var(--s-bg-panel);
+  border:              var(--s-panel-border);
+  border-radius:       var(--s-border-radius);
+  padding:             var(--s-gap-sm);
+  text-align:          center;
+  min-width:           var(--s-badge-size);
+}
+
+.stat-badge__value {
+  font-family: var(--s-font-display);
+  font-size:   var(--s-font-size-lg);
+  color:       var(--s-color-text-primary);
+  display:     block;
+}
+
+.stat-badge__label {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Gem (proficiency / expertise dot) ──────────────────────────────────── */
+.gem {
+  width:            var(--s-gem-size);
+  height:           var(--s-gem-size);
+  background-image: var(--s-img-gem-empty);
+  background-size:  cover;
+  background-color: transparent;
+  border:           2px solid var(--s-color-gem);
+  border-radius:    50%;
+  display:          inline-block;
+  flex-shrink:      0;
+}
+
+.gem--filled {
+  background-image: var(--s-img-gem-filled);
+  background-color: var(--s-color-gem);
+  border-color:     var(--s-color-gem);
+}
+
+.gem--expertise {
+  background-image: var(--s-img-gem-expertise);
+  background-color: var(--s-color-accent);
+  border-color:     var(--s-color-accent);
+}
+
+/* ── Skill row ──────────────────────────────────────────────────────────── */
+.skill-row {
+  display:     flex;
+  align-items: center;
+  gap:         var(--s-gap-sm);
+  padding:     0.25rem 0;
+  cursor:      pointer;
+}
+
+.skill-row__bonus {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-sm);
+  color:       var(--s-color-text-primary);
+  min-width:   2rem;
+  text-align:  right;
+}
+
+.skill-row__label {
+  font-family: var(--s-font-body);
+  font-size:   var(--s-font-size-sm);
+  color:       var(--s-color-text-primary);
+  flex:        1;
+}
+
+.skill-row__ability {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+}
+
+/* ── Spell slot tracker ─────────────────────────────────────────────────── */
+.spell-slot-tracker {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       var(--s-gap-sm);
+}
+
+.spell-slot-level {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            0.25rem;
+}
+
+.spell-slot-level__label {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+}
+
+.spell-slot-level__pips {
+  display: flex;
+  gap:     0.2rem;
+}
+
+.spell-slot-pip {
+  width:            12px;
+  height:           12px;
+  border-radius:    50%;
+  border:           1px solid var(--s-color-spell);
+  background-image: var(--s-img-spell-slot-empty);
+  background-size:  cover;
+  cursor:           pointer;
+}
+
+.spell-slot-pip--used {
+  background-image: var(--s-img-spell-slot-full);
+  background-color: var(--s-color-spell);
+}
+
+/* ── Nav bar ────────────────────────────────────────────────────────────── */
+.nav-bar {
+  display:          flex;
+  align-items:      center;
+  justify-content:  space-around;
+  height:           100%;
+  background-image: var(--s-img-nav-bg);
+  background-color: var(--s-bg-nav);
+  background-size:  cover;
+  border-top:       var(--s-panel-border);
+}
+
+.nav-item {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            0.2rem;
+  padding:        0.5rem;
+  cursor:         pointer;
+  color:          var(--s-color-text-muted);
+  font-family:    var(--s-font-ui);
+  font-size:      var(--s-font-size-xs);
+  border:         none;
+  background:     transparent;
+  text-decoration:none;
+}
+
+.nav-item--active {
+  color: var(--s-color-accent);
+}
+
+.nav-item__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* ── Meta tag ───────────────────────────────────────────────────────────── */
+.meta-tag {
+  font-family:   var(--s-font-ui);
+  font-size:     var(--s-font-size-xs);
+  color:         var(--s-color-text-muted);
+  border:        1px solid var(--s-color-border);
+  border-radius: var(--s-border-radius);
+  padding:       0.1rem 0.4rem;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  font-family:   var(--s-font-ui);
+  font-size:     var(--s-font-size-sm);
+  color:         var(--s-color-text-primary);
+  background:    var(--s-bg-panel);
+  border:        var(--s-panel-border);
+  border-radius: var(--s-border-radius);
+  padding:       0.4rem 0.9rem;
+  cursor:        pointer;
+}
+
+.btn--accent {
+  background: var(--s-color-accent);
+  color:      var(--s-color-text-panel);
+  border-color: var(--s-color-accent);
+}
+
+.btn--danger {
+  border-color: var(--s-color-danger);
+  color:        var(--s-color-danger);
+}
+
+/* ── Form inputs ────────────────────────────────────────────────────────── */
+input, select, textarea {
+  font-family:   var(--s-font-body);
+  font-size:     var(--s-font-size-sm);
+  color:         var(--s-color-text-input);
+  background:    var(--s-bg-input);
+  border:        var(--s-panel-border);
+  border-radius: var(--s-border-radius);
+  padding:       0.4rem 0.6rem;
+  width:         100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline:       none;
+  border-color:  var(--s-color-accent);
+}
+
+label {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+  display:     block;
+  margin-bottom: 0.25rem;
+}

@@ -1,1 +1,135 @@
-/* TODO */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Colour */
+  --s-bg-page:           #0e0b2e;
+  --s-bg-panel:          #1a1550;
+  --s-bg-panel-alt:      #f5e6c8;
+  --s-bg-nav:            #0a0820;
+  --s-bg-input:          #0e0b2e;
+  --s-color-accent:      #c8a94a;
+  --s-color-gem:         #7c6abf;
+  --s-color-text-primary:#f5e6c8;
+  --s-color-text-panel:  #3a2200;
+  --s-color-text-muted:  #a09070;
+  --s-color-text-input:  #f5e6c8;
+  --s-color-hp:          #e85d5d;
+  --s-color-spell:       #7c6abf;
+  --s-color-danger:      #e85d5d;
+  --s-color-success:     #5dbb6b;
+  --s-color-border:      var(--s-color-accent);
+
+  /* Typography */
+  --s-font-display:  'Cinzel Decorative', serif;
+  --s-font-ui:       'Cinzel', serif;
+  --s-font-body:     'Cinzel', serif;
+  --s-font-size-xs:  0.7rem;
+  --s-font-size-sm:  0.85rem;
+  --s-font-size-md:  1rem;
+  --s-font-size-lg:  1.25rem;
+  --s-font-size-xl:  1.75rem;
+
+  /* Layout */
+  --s-border-radius:  2px;
+  --s-panel-border:   2px solid var(--s-color-accent);
+  --s-panel-padding:  1rem;
+  --s-nav-height:     64px;
+  --s-orb-size:       64px;
+  --s-badge-size:     56px;
+  --s-gem-size:       14px;
+  --s-gap-sm:         0.5rem;
+  --s-gap-md:         1rem;
+  --s-gap-lg:         1.5rem;
+
+  /* Image slots — all default to none; skins provide them */
+  --s-img-bg-page:         none;
+  --s-img-panel-frame:     none;
+  --s-img-panel-frame-sm:  none;
+  --s-img-name-banner:     none;
+  --s-img-hp-shield:       none;
+  --s-img-ability-orb:     none;
+  --s-img-stat-badge:      none;
+  --s-img-gem-empty:       none;
+  --s-img-gem-filled:      none;
+  --s-img-gem-expertise:   none;
+  --s-img-spell-slot-full: none;
+  --s-img-spell-slot-empty:none;
+  --s-img-nav-bg:          none;
+  --s-img-sidebar-bg:      none;
+  --s-img-divider:         none;
+  --s-img-outer-border:    none;
+  --s-img-scroll-ornament: none;
+  --s-img-footer-ornament: none;
+  --s-img-modal-bg:        none;
+  --s-img-modal-frame:     none;
+  --s-img-scroll-reveal:   none;
+  --s-img-corner-gem:      none;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color:    var(--s-bg-page);
+  background-image:    var(--s-img-bg-page);
+  background-size:     cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family:         var(--s-font-body);
+  font-size:           var(--s-font-size-md);
+  color:               var(--s-color-text-primary);
+  min-height:          100vh;
+  overflow-x:          hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--s-nav-height);
+}
+
+#nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--s-nav-height);
+  z-index: 100;
+}
+
+#modal-container {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+
+#modal-container:not(:empty) {
+  pointer-events: auto;
+}
+
+/* Utility */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background-image: var(--s-img-divider);
+  background-color: var(--s-color-accent);
+  background-size: 100% 100%;
+  opacity: 0.4;
+  margin: var(--s-gap-md) 0;
+}
