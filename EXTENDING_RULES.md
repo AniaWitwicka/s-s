@@ -29,36 +29,30 @@ Adding an extension is always three steps:
   {
     "index": "totem-warrior",
     "name": "Totem Warrior",
-    "class": { "name": "Barbarian" },
+    "class": { "index": "barbarian", "name": "Barbarian" },
     "subclass_flavor": "Primal Path",
     "desc": ["Barbarians who follow the Path of the Totem Warrior..."],
-    "_source": "phb"
-  },
-  {
-    "index": "storm-herald",
-    "name": "Storm Herald",
-    "class": { "name": "Barbarian" },
-    "subclass_flavor": "Primal Path",
-    "desc": ["Storm heralds are barbarians who..."],
     "_source": "phb"
   }
 ]
 ```
 
-**2. Open `src/engine/data/loader.js` and add two lines:**
+**2. Create `src/engine/data/extensions/phb-features.json`** with the features for that subclass (see Features shape below). Without this, the subclass appears in the level-up picker but the Feats tab won't be populated automatically.
+
+**3. Open `src/engine/data/loader.js` and add the imports:**
 
 ```js
-// At the top with the other imports:
 import phbSubclasses from './extensions/phb-subclasses.json'
+import phbFeatures   from './extensions/phb-features.json'
 
-// In the data object:
 export const data = {
-  subclasses: [...subclassesSRD, ...phbSubclasses],   // ← add here
+  subclasses: [...subclassesSRD, ...phbSubclasses],
+  features:   [...featuresSRD,   ...phbFeatures],
   // ...rest unchanged
 }
 ```
 
-The Settings screen subclass dropdown will now include your new entries automatically.
+The level-up subclass picker and the Feats tab will both reflect your new content automatically.
 
 ---
 
@@ -66,20 +60,67 @@ The Settings screen subclass dropdown will now include your new entries automati
 
 Match the shape of the SRD entries. Only include the fields the app actually uses — extras are ignored.
 
+---
+
 ### Subclass
 
 ```json
 {
-  "index":            "totem-warrior",
-  "name":             "Totem Warrior",
-  "class":            { "name": "Barbarian" },
-  "subclass_flavor":  "Primal Path",
-  "desc":             ["Description paragraph 1.", "Paragraph 2."],
-  "_source":          "phb"
+  "index":           "totem-warrior",
+  "name":            "Totem Warrior",
+  "class":           { "index": "barbarian", "name": "Barbarian" },
+  "subclass_flavor": "Primal Path",
+  "desc":            ["Description paragraph 1.", "Paragraph 2."],
+  "_source":         "phb"
 }
 ```
 
-**Required:** `index`, `name`, `class.name`, `_source`
+**Required:** `index`, `name`, `class.index`, `class.name`, `_source`
+
+> **Note:** `class.index` must be lowercase (e.g. `"barbarian"`, not `"Barbarian"`). The level-up modal matches on `class.index`.
+
+---
+
+### Feature (class or subclass)
+
+Features are what gets written to the **Feats tab** during level-up. Every feature is tied to a class level. Subclass features also reference the subclass.
+
+**Base class feature** (no subclass field):
+
+```json
+{
+  "index": "totem-warrior-spirit",
+  "name":  "Totem Spirit",
+  "class": { "index": "barbarian", "name": "Barbarian" },
+  "level": 3,
+  "desc":  [
+    "At 3rd level, when you adopt this path, you choose a totem spirit...",
+    "Bear. While raging, you have resistance to all damage except psychic."
+  ],
+  "prerequisites": [],
+  "_source": "phb"
+}
+```
+
+**Subclass feature** (has a `subclass` field):
+
+```json
+{
+  "index":    "aspect-of-the-beast",
+  "name":     "Aspect of the Beast",
+  "class":    { "index": "barbarian", "name": "Barbarian" },
+  "subclass": { "index": "totem-warrior", "name": "Totem Warrior" },
+  "level":    6,
+  "desc":     ["At 6th level, you gain a magical benefit based on the totem animal..."],
+  "prerequisites": [],
+  "_source":  "phb"
+}
+```
+
+**Required:** `index`, `name`, `class.index`, `level`, `desc`, `_source`  
+**For subclass features:** also `subclass.index` (must match your subclass's `index`)
+
+The app uses `class.index` and `level` to find base features, and `subclass.index` + `level` to find subclass features. Getting these right is what connects the level-up screen to the Feats tab.
 
 ---
 
@@ -105,8 +146,7 @@ Match the shape of the SRD entries. Only include the fields the app actually use
 }
 ```
 
-**Required:** `index`, `name`, `level`, `school.name`, `classes`, `_source`  
-The spellbook search and rules lookup both use these fields.
+**Required:** `index`, `name`, `level`, `school.name`, `classes`, `_source`
 
 ---
 
@@ -119,15 +159,17 @@ The spellbook search and rules lookup both use these fields.
   "prerequisites": [],
   "desc":          [
     "You have practiced casting spells in the midst of combat...",
-    "• You have advantage on Constitution saving throws...",
+    "• You have advantage on Constitution saving throws that you make to maintain concentration.",
     "• You can perform the somatic components of spells even when you have weapons or a shield in one or both hands.",
-    "• When a hostile creature's movement provokes an opportunity attack from you, you can use your reaction to cast a spell at the creature..."
+    "• When a hostile creature's movement provokes an opportunity attack from you, you can use your reaction to cast a spell at the creature."
   ],
   "_source":       "phb"
 }
 ```
 
 **Required:** `index`, `name`, `desc`, `_source`
+
+> Feats in `data.feats` are what appears in the Feats tab search box. Class/subclass features added via the features array are separate — they get written to `char.feats` automatically during level-up.
 
 ---
 
@@ -177,7 +219,8 @@ The spellbook search and rules lookup both use these fields.
 ```js
 // src/engine/data/loader.js
 
-import phbSubclasses  from './extensions/phb-subclasses.json'
+import phbSubclasses   from './extensions/phb-subclasses.json'
+import phbFeatures     from './extensions/phb-features.json'
 import xanatharsSpells from './extensions/xanathars-spells.json'
 import homebrewSpells  from './extensions/my-homebrew.json'
 import voloRaces       from './extensions/volo-races.json'
@@ -185,6 +228,7 @@ import voloRaces       from './extensions/volo-races.json'
 export const data = {
   spells:     [...spellsSRD,     ...xanatharsSpells, ...homebrewSpells],
   subclasses: [...subclassesSRD, ...phbSubclasses],
+  features:   [...featuresSRD,   ...phbFeatures],      // ← needed for Feats tab on level-up
   races:      [...racesSRD,      ...voloRaces],
   // everything else stays SRD-only until you add extensions
   feats:      [...featsSRD],
@@ -207,11 +251,52 @@ Use a short consistent string: `"srd"`, `"phb"`, `"xge"`, `"tcoe"`, `"dmg"`, `"v
 
 ---
 
+## Two hardcoded maps — only relevant for brand new classes
+
+The extension system handles new **subclasses** and **features** with no code changes. However, if you add a **completely new class** (not just subclasses of existing ones), two maps in the engine need updating:
+
+### 1. Subclass selection level — `src/modals/level-up.js`
+
+```js
+const SUBCLASS_LEVEL = {
+  barbarian: 3, bard: 3, cleric: 1, druid: 2,
+  fighter: 3, monk: 3, paladin: 3, ranger: 3,
+  rogue: 3, sorcerer: 1, warlock: 1, wizard: 2,
+}
+```
+
+This tells the level-up flow at which class level the subclass picker appears. Add your new class here:
+
+```js
+const SUBCLASS_LEVEL = {
+  // ...existing...
+  artificer: 3,   // ← your new class
+}
+```
+
+### 2. Prepared casters — `src/engine/spells.js`
+
+```js
+const PREPARED_CASTERS = new Set(['cleric', 'druid', 'paladin', 'wizard'])
+const PREP_ABILITY     = { cleric: 'wis', druid: 'wis', paladin: 'cha', wizard: 'int' }
+```
+
+If your new class prepares spells from a list (rather than knowing a fixed set), add it here so the spell preparation screen appears after a long rest:
+
+```js
+const PREPARED_CASTERS = new Set(['cleric', 'druid', 'paladin', 'wizard', 'artificer'])
+const PREP_ABILITY     = { ..., artificer: 'int' }
+```
+
+Existing classes (Bard, Sorcerer, Ranger, Warlock) are **known casters** and are intentionally not in this set.
+
+---
+
 ## Extracting content from a PDF supplement
 
 1. Open the PDF (or relevant pages) in Claude
-2. Paste the relevant schema from above
-3. Prompt: *"Extract all [spells / subclasses / feats] from this text. Match this exact JSON shape. Add `_source: 'your-book-name'` to every entry. Flag anything that doesn't fit the schema."*
+2. Paste the relevant schema from above (subclass + features)
+3. Prompt: *"Extract all [subclasses / features / spells] from this text. Match this exact JSON shape. Use lowercase for all `index` and `class.index` values. Add `_source: 'your-book-name'` to every entry. Flag anything that doesn't fit the schema."*
 4. Save the output to `src/engine/data/extensions/your-book-name.json`
 5. Add the import and spread to `loader.js`
 
@@ -223,6 +308,7 @@ Use a short consistent string: `"srd"`, `"phb"`, `"xge"`, `"tcoe"`, `"dmg"`, `"v
 |---|---|---|
 | Classes | ✅ All 12 | |
 | Subclasses | ⚠️ 1 per class | Add PHB+ via extensions |
+| Class features | ✅ All SRD levels | Subclass features for PHB paths need extension |
 | Spells | ✅ 319 spells | Missing Xanathar's, Tasha's etc. |
 | Races | ✅ 9 races | Missing Aasimar, Genasi, etc. |
 | Feats | ⚠️ Alert only | Add PHB feats via extensions |
