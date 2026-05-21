@@ -1,0 +1,25 @@
+{
+  "name": "Default",
+  "fonts": [],
+  "variables": {
+    "--s-bg-page":            "#0e0b2e",
+    "--s-bg-panel":           "#1a1550",
+    "--s-bg-panel-alt":       "#f5e6c8",
+    "--s-bg-nav":             "#0a0820",
+    "--s-bg-input":           "#0e0b2e",
+    "--s-color-accent":       "#c8a94a",
+    "--s-color-gem":          "#7c6abf",
+    "--s-color-text-primary": "#f5e6c8",
+    "--s-color-text-panel":   "#3a2200",
+    "--s-color-text-muted":   "#a09070",
+    "--s-color-text-input":   "#f5e6c8",
+    "--s-color-hp":           "#e85d5d",
+    "--s-color-spell":        "#7c6abf",
+    "--s-color-danger":       "#e85d5d",
+    "--s-color-success":      "#5dbb6b",
+    "--s-font-display":       "'Cinzel Decorative', serif",
+    "--s-font-ui":            "'Cinzel', serif",
+    "--s-font-body":          "'Cinzel', serif"
+  },
+  "images": {}
+}

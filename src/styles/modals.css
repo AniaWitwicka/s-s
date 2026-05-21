@@ -142,3 +142,7 @@
   color:       var(--s-color-text-primary);
   line-height: 1.6;
 }
+
+.rules-drawer__section {
+  margin-bottom: var(--s-gap-sm);
+}

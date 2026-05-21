@@ -3,6 +3,8 @@ import { abilityOrb } from '../components/ability-orb.js'
 import { hpShield } from '../components/hp-shield.js'
 import { statBadge } from '../components/stat-badge.js'
 import { getModifier, getProficiencyBonus, getSavingThrow, formatModifier, ABILITY_KEYS, ABILITY_LABELS } from '../engine/abilities.js'
+import { open as openRest } from '../modals/rest.js'
+import { open as openLevelUp } from '../modals/level-up.js'
 
 export function render(container) {
   const char = store.getActiveCharacter()
@@ -64,6 +66,11 @@ export function render(container) {
         </div>
       </div>
 
+      <div style="display:flex;gap:var(--s-gap-sm);justify-content:flex-end">
+        <button class="btn" id="rest-btn">🌙 Rest</button>
+        <button class="btn btn--accent" id="levelup-btn">⬆ Level Up</button>
+      </div>
+
       ${char.hp.current <= 0 ? `
         <div class="panel">
           <strong style="font-family:var(--s-font-ui);font-size:var(--s-font-size-xs);color:var(--s-color-danger);letter-spacing:.1em">DEATH SAVES</strong>
@@ -110,6 +117,9 @@ function attach(container, char) {
       }
     })
   })
+
+  container.querySelector('#rest-btn')?.addEventListener('click', openRest)
+  container.querySelector('#levelup-btn')?.addEventListener('click', openLevelUp)
 
   container.querySelectorAll('[data-save-type]').forEach(gem => {
     gem.addEventListener('click', () => {

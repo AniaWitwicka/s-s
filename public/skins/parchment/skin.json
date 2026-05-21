@@ -1,0 +1,27 @@
+{
+  "name": "Parchment",
+  "fonts": [],
+  "variables": {
+    "--s-bg-page":            "#c8b99a",
+    "--s-bg-panel":           "#e8d9b5",
+    "--s-bg-panel-alt":       "#f5edd8",
+    "--s-bg-nav":             "#8b6914",
+    "--s-bg-input":           "#f5edd8",
+    "--s-color-accent":       "#8b2500",
+    "--s-color-gem":          "#5a3e1b",
+    "--s-color-text-primary": "#2c1a00",
+    "--s-color-text-panel":   "#2c1a00",
+    "--s-color-text-muted":   "#7a5c2e",
+    "--s-color-text-input":   "#2c1a00",
+    "--s-color-hp":           "#8b2500",
+    "--s-color-spell":        "#1a3a6b",
+    "--s-color-danger":       "#8b2500",
+    "--s-color-success":      "#2a5c1b",
+    "--s-color-border":       "#8b6914",
+    "--s-font-display":       "'MedievalSharp', 'Palatino Linotype', serif",
+    "--s-font-ui":            "'Palatino Linotype', Georgia, serif",
+    "--s-font-body":          "'Palatino Linotype', Georgia, serif",
+    "--s-panel-border":       "1px solid #8b6914"
+  },
+  "images": {}
+}
