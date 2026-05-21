@@ -1,3 +1,6 @@
+# 5etools local data source — never commit (contains copyrighted non-SRD content)
+5etools-data/
+
 # Logs
 logs
 *.log

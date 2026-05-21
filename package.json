@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "fetch-srd": "node scripts/fetch-srd.js",
+    "fetch-srd":  "node scripts/fetch-srd.js",
+    "fetch-data": "node scripts/fetch-srd.js",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
