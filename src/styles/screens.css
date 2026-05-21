@@ -25,16 +25,15 @@
 }
 
 .overview__combat {
-  display:     flex;
-  align-items: center;
-  gap:         var(--s-gap-md);
+  display:         flex;
+  align-items:     center;
+  justify-content: space-evenly;
+  flex-wrap:       wrap;
+  gap:             var(--s-gap-sm);
 }
 
 .overview__stats {
-  display:        flex;
-  flex-wrap:      wrap;
-  gap:            var(--s-gap-sm);
-  flex:           1;
+  display: contents; /* children participate directly in the parent flex row */
 }
 
 .overview__abilities {
