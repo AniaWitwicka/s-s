@@ -346,6 +346,56 @@ label {
   margin-bottom: 0.25rem;
 }
 
+/* ── Collapsible card ───────────────────────────────────────────────────── */
+.collapse-item__header {
+  display:     flex;
+  align-items: center;
+  gap:         var(--s-gap-sm);
+  cursor:      pointer;
+  user-select: none;
+}
+
+.collapse-item__chevron {
+  font-style:  normal;
+  font-size:   var(--s-font-size-sm);
+  color:       var(--s-color-text-muted);
+  flex-shrink: 0;
+  display:     inline-block;
+  transition:  transform 0.15s ease;
+  width:       0.75rem;
+  text-align:  center;
+}
+
+.collapse-item--open > .collapse-item__header .collapse-item__chevron {
+  transform: rotate(90deg);
+}
+
+.collapse-item__body {
+  display:     none;
+  padding-top: var(--s-gap-sm);
+  padding-left: calc(var(--s-gap-sm) + 0.75rem);
+}
+
+.collapse-item--open > .collapse-item__body {
+  display: block;
+}
+
+.collapse-detail {
+  font-family: var(--s-font-ui);
+  font-size:   var(--s-font-size-xs);
+  color:       var(--s-color-text-muted);
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         var(--s-gap-sm);
+  margin-bottom: var(--s-gap-sm);
+}
+
+.collapse-detail__tag {
+  border:        1px solid var(--s-color-border);
+  border-radius: var(--s-border-radius);
+  padding:       0.1rem 0.35rem;
+}
+
 /* ── Level-up modal class picker ─────────────────────────────────────────── */
 .levelup__class-btn {
   display:        flex;

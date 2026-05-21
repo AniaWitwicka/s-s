@@ -49,18 +49,7 @@ export function render(container) {
               .map(([level, spells]) => `
                 <div class="spellbook__level-group">
                   <div class="spellbook__level-heading">${level === '0' ? 'Cantrips' : `Level ${level}`}</div>
-                  ${spells.map(s => `
-                    <div class="spell-row">
-                      <span
-                        class="spell-row__prepared${s.prepared ? ' spell-row__prepared--yes' : ''}"
-                        data-toggle="${s.index}"
-                        title="${s.prepared ? 'Prepared' : 'Unprepared'}"
-                      ></span>
-                      <span class="spell-row__name">${s.name}</span>
-                      <span class="spell-row__school">${s.school ?? ''}</span>
-                      <button class="btn" data-remove="${s.index}" style="padding:.15rem .4rem;font-size:.7rem">✕</button>
-                    </div>
-                  `).join('')}
+                  ${spells.map(s => _spellRow(s)).join('')}
                 </div>
               `).join('')
         }
@@ -72,10 +61,61 @@ export function render(container) {
   attach(container, char)
 }
 
+function _spellRow(s) {
+  // Look up full spell details for the expanded body
+  const full = data.spells.find(sp => sp.index === s.index)
+  const tags = []
+  if (full?.casting_time) tags.push(full.casting_time)
+  if (full?.range)        tags.push(full.range)
+  if (full?.duration)     tags.push(full.duration)
+  if (full?.concentration) tags.push('Concentration')
+  if (full?.ritual)       tags.push('Ritual')
+  if (full?.components?.length) tags.push(full.components.join(', '))
+
+  const desc = full?.desc ?? []
+  const higherLevel = full?.higher_level ?? []
+
+  return `
+    <div class="collapse-item">
+      <div class="collapse-item__header spell-row" data-collapse-toggle>
+        <span
+          class="spell-row__prepared${s.prepared ? ' spell-row__prepared--yes' : ''}"
+          data-toggle="${s.index}"
+          title="${s.prepared ? 'Prepared' : 'Unprepared'}"
+        ></span>
+        <span class="spell-row__name" style="flex:1">${s.name}</span>
+        <span class="spell-row__school">${s.school ?? ''}</span>
+        <span class="collapse-item__chevron">›</span>
+        <button class="btn" data-remove="${s.index}" style="padding:.15rem .4rem;font-size:.7rem;flex-shrink:0">✕</button>
+      </div>
+      <div class="collapse-item__body">
+        ${tags.length ? `
+          <div class="collapse-detail">
+            ${tags.map(t => `<span class="collapse-detail__tag">${t}</span>`).join('')}
+          </div>
+        ` : ''}
+        ${desc.map(p => `<p class="feat-card__desc" style="margin-bottom:.4rem">${p}</p>`).join('')}
+        ${higherLevel.length ? `
+          <p class="feat-card__desc" style="margin-top:.4rem;font-style:italic">${higherLevel[0]}</p>
+        ` : ''}
+      </div>
+    </div>
+  `
+}
+
 function attach(container, char) {
   container.querySelector('#rules-btn')?.addEventListener('click', openRules)
 
-  // Sync spell slots from class + level
+  // ── Collapse toggle ──
+  container.querySelectorAll('[data-collapse-toggle]').forEach(header => {
+    header.addEventListener('click', e => {
+      if (e.target.closest('[data-toggle]')) return   // prepared circle — don't collapse
+      if (e.target.closest('[data-remove]')) return   // remove button — don't collapse
+      header.closest('.collapse-item').classList.toggle('collapse-item--open')
+    })
+  })
+
+  // ── Sync spell slots ──
   container.querySelector('#sync-slots')?.addEventListener('click', () => {
     const slots = getSpellSlots(char.meta.class, char.meta.level)
     if (!Array.isArray(slots)) return
@@ -87,7 +127,7 @@ function attach(container, char) {
     render(container)
   })
 
-  // Pip clicks — toggle used
+  // ── Pip clicks — toggle used ──
   container.querySelectorAll('.spell-slot-pip').forEach(pip => {
     pip.addEventListener('click', () => {
       const level = pip.dataset.slotLevel
@@ -98,7 +138,7 @@ function attach(container, char) {
     })
   })
 
-  // Search
+  // ── Spell search ──
   const searchEl  = container.querySelector('#spell-search')
   const resultsEl = container.querySelector('#spell-results')
   searchEl?.addEventListener('input', () => {
@@ -133,7 +173,7 @@ function attach(container, char) {
     })
   })
 
-  // Toggle prepared
+  // ── Toggle prepared ──
   container.querySelectorAll('[data-toggle]').forEach(el => {
     el.addEventListener('click', e => {
       e.stopPropagation()
@@ -145,7 +185,7 @@ function attach(container, char) {
     })
   })
 
-  // Remove spell
+  // ── Remove spell ──
   container.querySelectorAll('[data-remove]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation()

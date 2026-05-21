@@ -13,7 +13,7 @@ export function render(container) {
         <input id="feat-search" type="text" placeholder="Search SRD feats…" autocomplete="off">
         <div id="feat-results" style="max-height:200px;overflow-y:auto;margin-top:var(--s-gap-sm)"></div>
         <p style="font-size:var(--s-font-size-xs);color:var(--s-color-text-muted);margin-top:var(--s-gap-sm)">
-          The SRD contains only one feat (Alert). Add homebrew feats by name below.
+          The SRD contains only one feat (Alert). Add class features or homebrew feats by name below.
         </p>
         <div style="display:flex;gap:var(--s-gap-sm);margin-top:var(--s-gap-sm)">
           <input id="custom-feat-name" type="text" placeholder="Custom feat name…" style="flex:1">
@@ -25,13 +25,19 @@ export function render(container) {
         ${char.feats.length === 0
           ? '<p style="color:var(--s-color-text-muted);font-size:var(--s-font-size-sm)">No feats yet.</p>'
           : char.feats.map((f, i) => `
-              <div class="feat-card">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span class="feat-card__name">${f.name}</span>
-                  <button class="btn" data-remove="${i}" style="padding:.15rem .4rem;font-size:.7rem">✕</button>
+              <div class="collapse-item">
+                <div class="collapse-item__header" data-collapse-toggle>
+                  <span class="collapse-item__chevron">›</span>
+                  <span class="feat-card__name" style="flex:1">${f.name}</span>
+                  <button class="btn" data-remove="${i}" style="padding:.15rem .4rem;font-size:.7rem;flex-shrink:0">✕</button>
                 </div>
-                ${f.desc ? `<p class="feat-card__desc">${f.desc}</p>` : ''}
-                <div class="divider"></div>
+                <div class="collapse-item__body">
+                  ${f.desc
+                    ? f.desc.split('\n\n').map(p => `<p class="feat-card__desc" style="margin-bottom:.4rem">${p}</p>`).join('')
+                    : '<p class="feat-card__desc">No description.</p>'
+                  }
+                </div>
+                ${i < char.feats.length - 1 ? '<div class="divider"></div>' : ''}
               </div>
             `).join('')
         }
@@ -44,6 +50,16 @@ export function render(container) {
 }
 
 function attach(container, char) {
+  // ── Collapse toggle ──
+  container.querySelectorAll('[data-collapse-toggle]').forEach(header => {
+    header.addEventListener('click', e => {
+      // Remove button inside header must not trigger collapse
+      if (e.target.closest('[data-remove]')) return
+      header.closest('.collapse-item').classList.toggle('collapse-item--open')
+    })
+  })
+
+  // ── Search ──
   const searchEl  = container.querySelector('#feat-search')
   const resultsEl = container.querySelector('#feat-results')
 
@@ -77,6 +93,7 @@ function attach(container, char) {
     })
   })
 
+  // ── Custom feat ──
   container.querySelector('#add-custom-feat')?.addEventListener('click', () => {
     const name = container.querySelector('#custom-feat-name').value.trim()
     if (!name) return
@@ -85,6 +102,7 @@ function attach(container, char) {
     render(container)
   })
 
+  // ── Remove ──
   container.querySelectorAll('[data-remove]').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = parseInt(btn.dataset.remove, 10)
