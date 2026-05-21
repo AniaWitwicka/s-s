@@ -376,3 +376,11 @@ label {
   letter-spacing: 0.1em;
   margin-bottom:  var(--s-gap-sm);
 }
+
+.levelup__subclass-btn--active {
+  border-color: var(--s-color-accent);
+}
+
+.levelup__subclass-btn--active .levelup__class-name {
+  color: var(--s-color-accent);
+}
