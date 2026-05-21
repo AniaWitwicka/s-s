@@ -81,6 +81,12 @@ const FULL_CASTERS  = new Set(['bard', 'cleric', 'druid', 'sorcerer', 'wizard'])
 const HALF_CASTERS  = new Set(['paladin', 'ranger'])
 const PACT_CASTERS  = new Set(['warlock'])
 
+// Classes that prepare spells — can swap which spells are prepared after a long rest
+const PREPARED_CASTERS = new Set(['cleric', 'druid', 'paladin', 'wizard'])
+
+// Ability score each prepared caster uses for their prep limit
+const PREP_ABILITY = { cleric: 'wis', druid: 'wis', paladin: 'cha', wizard: 'int' }
+
 export const getSpellSlots = (className, level) => {
   const cls = className.toLowerCase()
   if (FULL_CASTERS.has(cls))  return FULL_CASTER_SLOTS[level]  || []
@@ -89,9 +95,21 @@ export const getSpellSlots = (className, level) => {
   return []
 }
 
-export const isSpellcaster = (className) => {
+export const isSpellcaster    = (className) => {
   const cls = className.toLowerCase()
   return FULL_CASTERS.has(cls) || HALF_CASTERS.has(cls) || PACT_CASTERS.has(cls)
 }
+export const isPactMagic      = (className) => PACT_CASTERS.has(className.toLowerCase())
+export const isPreparedCaster = (className) => PREPARED_CASTERS.has(className.toLowerCase())
 
-export const isPactMagic = (className) => PACT_CASTERS.has(className.toLowerCase())
+// How many spells a prepared caster can have prepared (mod + level; Paladin uses half-level)
+export const getMaxPrepared = (className, classLevel, abilityScore) => {
+  const cls = className.toLowerCase()
+  if (!PREPARED_CASTERS.has(cls)) return 0
+  const mod = getModifier(Number(abilityScore) || 10)
+  const lvl = cls === 'paladin' ? Math.floor(classLevel / 2) : classLevel
+  return Math.max(1, mod + lvl)
+}
+
+// Ability key for prep limit of a prepared caster class
+export const getPrepAbility = (className) => PREP_ABILITY[className.toLowerCase()] ?? 'wis'
