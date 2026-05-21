@@ -139,14 +139,37 @@ export function render(container) {
 
 function attach(container) {
   container.querySelector('#save-meta')?.addEventListener('click', () => {
-    const val = id => container.querySelector(`#${id}`)?.value ?? ''
+    const val  = id => container.querySelector(`#${id}`)?.value ?? ''
+    const char = store.getActiveCharacter()
+
+    const newClass    = val('char-class')
+    const newSubclass = val('char-subclass')
+    const newLevel    = _clamp(parseInt(val('char-level'), 10), 1, 20)
+
+    // If the class or level changed from what meta.classes tracks,
+    // reset the class-level breakdown so they stay in sync.
+    // (meta.classes is populated by Level Up; settings is the authoritative override.)
+    const currentClasses = char?.meta?.classes ?? []
+    const trackedTotal   = currentClasses.reduce((s, c) => s + c.level, 0)
+    const trackedClass   = currentClasses[0]?.name ?? char?.meta?.class
+    const classChanged   = trackedClass !== newClass
+    const levelChanged   = trackedTotal !== newLevel
+
+    if (classChanged || levelChanged) {
+      // Rebuild as a single-class character at the new level.
+      // Multiclass breakdown via Level Up can be rebuilt from there.
+      store.updateCharacterPath('meta.classes', [
+        { name: newClass, level: newLevel, subclass: newSubclass }
+      ])
+    }
+
     store.updateCharacterPath('meta.name',       val('char-name'))
-    store.updateCharacterPath('meta.class',      val('char-class'))
-    store.updateCharacterPath('meta.subclass',   val('char-subclass'))
+    store.updateCharacterPath('meta.class',      newClass)
+    store.updateCharacterPath('meta.subclass',   newSubclass)
     store.updateCharacterPath('meta.race',       val('char-race'))
     store.updateCharacterPath('meta.background', val('char-background'))
     store.updateCharacterPath('meta.alignment',  val('char-alignment'))
-    store.updateCharacterPath('meta.level',   _clamp(parseInt(val('char-level'), 10), 1, 20))
+    store.updateCharacterPath('meta.level',      newLevel)
     store.updateCharacterPath('meta.xp',      Math.max(0, parseInt(val('char-xp'), 10) || 0))
     store.updateCharacterPath('combat.speed', Math.max(0, parseInt(val('char-speed'), 10) || 30))
     store.updateCharacterPath('combat.ac',    Math.max(1, parseInt(val('char-ac'), 10) || 10))
