@@ -3,19 +3,55 @@ const BP_ORDER    = ['xl', 'lg', 'md', 'sm', 'xs']
 
 let resizeTimer = null
 
-export async function loadSkin(skinId) {
-  const basePath = `/skins/${skinId}`
+function expandToRawUrl(input) {
+  input = input.trim().replace(/\/$/, '')  // strip trailing slash
 
-  const res = await fetch(`${basePath}/skin.json`)
-  if (!res.ok) throw new Error(`Skin "${skinId}" not found (${res.status})`)
+  // Already a raw URL — leave it alone
+  if (input.startsWith('https://raw.githubusercontent.com')) return input
+
+  // GitHub blob URL pasted by mistake — convert to raw
+  if (input.startsWith('https://github.com')) {
+    return input
+      .replace('https://github.com', 'https://raw.githubusercontent.com')
+      .replace('/blob/', '/')
+      .replace(/\/skin\.json$/, '')   // basePath handles appending /skin.json
+  }
+
+  // Some other full URL — leave alone, will fail gracefully
+  if (input.startsWith('http')) return input
+
+  // Local skin ID — no slashes
+  if (!input.includes('/')) return input
+
+  // GitHub shorthand: username/repo/branch/directory
+  return `https://raw.githubusercontent.com/${input}`
+}
+
+export async function loadSkin(skinIdOrUrl) {
+  skinIdOrUrl = expandToRawUrl(skinIdOrUrl)
+
+  // Accepts either:
+  //   - a local skin id:  'dark-starfield'  → /skins/dark-starfield/skin.json
+  //   - a remote URL:     'https://raw.githubusercontent.com/.../skin.json'
+
+  const isRemote = skinIdOrUrl.startsWith('http')
+  const skinUrl  = isRemote
+    ? skinIdOrUrl
+    : `/skins/${skinIdOrUrl}/skin.json`
+  const basePath = isRemote
+    ? skinIdOrUrl.replace(/\/skin\.json$/, '')  // strip filename → base URL
+    : `/skins/${skinIdOrUrl}`
+
+  const res = await fetch(skinUrl)
+  if (!res.ok) throw new Error(`Skin not found at "${skinUrl}" (${res.status})`)
   const skin = await res.json()
 
   _loadFonts(skin.fonts ?? [])
   _applyVariables(skin.variables ?? {})
-  _applyResponsiveImages(skin.images ?? {}, basePath)
-  _injectSkinCSS(basePath)
+  _applyResponsiveImages(skin.images ?? {}, basePath, isRemote)
+  _injectSkinCSS(basePath, isRemote)
 
-  localStorage.setItem('active-skin', skinId)
+  localStorage.setItem('active-skin', skinIdOrUrl)
 }
 
 export function applyCustomCSS(css) {
@@ -30,10 +66,10 @@ export function clearCustomCSS() {
 }
 
 export function restoreFromStorage() {
-  const skinId   = localStorage.getItem('active-skin')
-  const customCSS = localStorage.getItem('custom-css')
-  if (skinId)    loadSkin(skinId).catch(console.error)
-  if (customCSS) applyCustomCSS(customCSS)
+  const skinIdOrUrl = localStorage.getItem('active-skin')
+  const customCSS   = localStorage.getItem('custom-css')
+  if (skinIdOrUrl) loadSkin(skinIdOrUrl).catch(console.error)
+  if (customCSS)   applyCustomCSS(customCSS)
 }
 
 // ---------------------------------------------------------------------------
@@ -57,8 +93,7 @@ function _applyVariables(variables) {
   Object.entries(variables).forEach(([k, v]) => root.style.setProperty(k, v))
 }
 
-function _applyResponsiveImages(images, basePath) {
-  // Remove any previous resize listener by storing it on the function itself
+function _applyResponsiveImages(images, basePath, isRemote) {
   if (_applyResponsiveImages._listener) {
     window.removeEventListener('resize', _applyResponsiveImages._listener)
   }
@@ -67,7 +102,10 @@ function _applyResponsiveImages(images, basePath) {
     const width = window.innerWidth
     const root  = document.documentElement
     Object.entries(images).forEach(([key, config]) => {
-      root.style.setProperty(`--s-img-${key}`, `url('${_resolve(config, basePath, width)}')`)
+      root.style.setProperty(
+        `--s-img-${key}`,
+        `url('${_resolve(config, basePath, width, isRemote)}')`
+      )
     })
   }
 
@@ -81,21 +119,27 @@ function _applyResponsiveImages(images, basePath) {
   applyAll()
 }
 
-function _resolve(config, basePath, width) {
-  if (typeof config === 'string') return `${basePath}/images/${config}`
+function _resolve(config, basePath, width, isRemote) {
+  // Remote skins: image values in skin.json are already full URLs
+  // Local skins:  image values are filenames, prepend basePath/images/
+  if (typeof config === 'string') {
+    return isRemote ? config : `${basePath}/images/${config}`
+  }
   for (const bp of BP_ORDER) {
     if (width >= BREAKPOINTS[bp] && config[bp]) {
-      return `${basePath}/images/${config[bp]}`
+      return isRemote ? config[bp] : `${basePath}/images/${config[bp]}`
     }
   }
   const first = Object.keys(config)[0]
-  return `${basePath}/images/${config[first]}`
+  return isRemote ? config[first] : `${basePath}/images/${config[first]}`
 }
 
-function _injectSkinCSS(basePath) {
-  const el = _getOrCreate('link', 'active-skin-css')
-  el.rel  = 'stylesheet'
-  el.href = `${basePath}/skin.css`
+function _injectSkinCSS(basePath, isRemote) {
+  const el   = _getOrCreate('link', 'active-skin-css')
+  el.rel     = 'stylesheet'
+  // Remote skins: skin.css lives next to skin.json at basePath
+  // Local skins:  same pattern
+  el.href    = `${basePath}/skin.css`
 }
 
 function _getOrCreate(tag, id) {

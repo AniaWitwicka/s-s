@@ -51,6 +51,23 @@ export function render(container) {
       </div>
 
       <div class="panel">
+        <div class="settings__section-title">Load skin from GitHub</div>
+        <label>
+          GitHub path or URL
+          <input
+            id="gh-skin-input"
+            type="text"
+            placeholder="e.g. AniaWitwicka/dnd-skin/main/dark-starfield"
+            autocomplete="off"
+          >
+        </label>
+        <div style="display:flex;align-items:center;gap:var(--s-gap-sm);margin-top:var(--s-gap-sm)">
+          <button class="btn btn--accent" id="gh-skin-load">Load</button>
+          <span id="gh-skin-status" style="font-family:var(--s-font-ui);font-size:var(--s-font-size-xs)"></span>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="settings__section-title">Custom CSS</div>
         <textarea id="custom-css" rows="10" placeholder="/* paste your skin CSS here */">${_esc(state.customCSS)}</textarea>
         <div style="display:flex;gap:var(--s-gap-sm);margin-top:var(--s-gap-sm)">
@@ -89,6 +106,36 @@ function attach(container) {
         .catch(err => console.error('Skin load failed:', err))
     })
   })
+
+  const ghInput  = container.querySelector('#gh-skin-input')
+  const ghStatus = container.querySelector('#gh-skin-status')
+
+  function doGhLoad() {
+    const val = ghInput.value.trim()
+    if (!val) return
+
+    ghStatus.textContent = 'Loading…'
+    ghStatus.style.color = 'var(--s-color-text-muted)'
+
+    const loadBtn = container.querySelector('#gh-skin-load')
+    loadBtn.disabled = true
+
+    loadSkin(val)
+      .then(() => {
+        store.setActiveSkin(val)
+        ghStatus.textContent = 'Skin applied!'
+        ghStatus.style.color = 'var(--s-color-success)'
+        loadBtn.disabled = false
+      })
+      .catch(() => {
+        ghStatus.textContent = 'Could not load skin. Check the path and make sure the repo is public.'
+        ghStatus.style.color = 'var(--s-color-danger)'
+        loadBtn.disabled = false
+      })
+  }
+
+  container.querySelector('#gh-skin-load')?.addEventListener('click', doGhLoad)
+  ghInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doGhLoad() })
 
   container.querySelector('#apply-css')?.addEventListener('click', () => {
     const css = container.querySelector('#custom-css').value
