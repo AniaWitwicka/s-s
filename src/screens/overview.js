@@ -63,7 +63,7 @@ export function render(container) {
       <div class="panel overview__saving-throws">
         <div class="divider"></div>
         <strong style="font-family:var(--s-font-ui);font-size:var(--s-font-size-xs);color:var(--s-color-text-muted);letter-spacing:.1em">SAVING THROWS</strong>
-        <div style="display:flex;flex-wrap:wrap;gap:var(--s-gap-sm);margin-top:var(--s-gap-sm)">
+        <div style="display:flex;flex-wrap:wrap;gap:var(--s-gap-sm);justify-content:space-evenly;margin-top:var(--s-gap-sm)">
           ${ABILITY_KEYS.map(key => {
             const bonus = getSavingThrow(char.abilities[key], char.savingThrows[key], char.meta.level)
             return `
