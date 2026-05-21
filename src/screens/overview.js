@@ -10,9 +10,13 @@ export function render(container) {
   const char = store.getActiveCharacter()
   if (!char) { container.innerHTML = '<p style="padding:1rem">No character found.</p>'; return }
 
-  const prof = getProficiencyBonus(char.meta.level)
-  const initMod = getModifier(char.abilities.dex)
-  const spellDC = 8 + prof + getModifier(char.abilities[char.combat.spellcastingAbility])
+  const level       = Number(char.meta.level)         || 1
+  const ac          = Number(char.combat.ac)           || 10
+  const speed       = Number(char.combat.speed)        || 30
+  const spellAbility = char.combat.spellcastingAbility || 'int'
+  const prof        = getProficiencyBonus(level)
+  const initMod     = getModifier(Number(char.abilities.dex) || 10)
+  const spellDC     = 8 + prof + getModifier(Number(char.abilities[spellAbility]) || 10)
 
   container.innerHTML = `
     <div class="screen screen--overview">
@@ -32,11 +36,17 @@ export function render(container) {
       <div class="overview__combat panel">
         ${hpShield({ current: char.hp.current, max: char.hp.max, temp: char.hp.temp })}
         <div class="overview__stats">
-          ${statBadge({ label: 'AC',        value: char.combat.ac })}
+          <div class="stat-badge" data-edit="ac" title="Click to edit" style="cursor:pointer">
+            <span class="stat-badge__value">${ac}</span>
+            <span class="stat-badge__label">AC</span>
+          </div>
           ${statBadge({ label: 'Initiative', value: formatModifier(initMod) })}
-          ${statBadge({ label: 'Speed',      value: char.combat.speed + 'ft' })}
-          ${statBadge({ label: 'Prof',       value: '+' + prof })}
-          ${statBadge({ label: 'Spell DC',   value: spellDC })}
+          <div class="stat-badge" data-edit="speed" title="Click to edit" style="cursor:pointer">
+            <span class="stat-badge__value">${speed}ft</span>
+            <span class="stat-badge__label">Speed</span>
+          </div>
+          ${statBadge({ label: 'Prof',     value: '+' + prof })}
+          ${statBadge({ label: 'Spell DC', value: spellDC })}
         </div>
       </div>
 
@@ -116,6 +126,16 @@ function attach(container, char) {
         render(container)
       }
     })
+  })
+
+  container.querySelector('[data-edit="ac"]')?.addEventListener('click', () => {
+    const val = parseInt(prompt('Armor Class:', char.combat.ac), 10)
+    if (!isNaN(val) && val >= 0) { store.updateCharacterPath('combat.ac', val); render(container) }
+  })
+
+  container.querySelector('[data-edit="speed"]')?.addEventListener('click', () => {
+    const val = parseInt(prompt('Speed (ft):', char.combat.speed), 10)
+    if (!isNaN(val) && val >= 0) { store.updateCharacterPath('combat.speed', val); render(container) }
   })
 
   container.querySelector('#rest-btn')?.addEventListener('click', openRest)

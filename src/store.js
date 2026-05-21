@@ -177,8 +177,35 @@ function setNestedValue(obj, path, value) {
 const saved = localStorage.getItem('scroll-and-soul')
 if (saved) {
   try {
-    Object.assign(state, JSON.parse(saved))
+    const parsed = JSON.parse(saved)
+    // Sanitize each character — merge with defaults so missing/corrupt fields
+    // (e.g. from an old React data shape) get safe fallback values
+    if (Array.isArray(parsed.characters)) {
+      parsed.characters = parsed.characters.map(c => _sanitizeCharacter(c))
+    }
+    Object.assign(state, parsed)
   } catch {
     localStorage.removeItem('scroll-and-soul')
+  }
+}
+
+function _sanitizeCharacter(c) {
+  const defaults = createCharacter()
+  return {
+    ...defaults,
+    ...c,
+    meta:        { ...defaults.meta,        ...(c.meta        ?? {}) },
+    abilities:   { ...defaults.abilities,   ...(c.abilities   ?? {}) },
+    savingThrows:{ ...defaults.savingThrows,...(c.savingThrows ?? {}) },
+    skills:      { ...defaults.skills,      ...(c.skills      ?? {}) },
+    hp:          { ...defaults.hp,          ...(c.hp          ?? {}) },
+    deathSaves:  { ...defaults.deathSaves,  ...(c.deathSaves  ?? {}) },
+    combat:      { ...defaults.combat,      ...(c.combat      ?? {}) },
+    spellSlots:  { ...defaults.spellSlots,  ...(c.spellSlots  ?? {}) },
+    inventory:   Array.isArray(c.inventory)  ? c.inventory  : [],
+    spellbook:   Array.isArray(c.spellbook)  ? c.spellbook  : [],
+    feats:       Array.isArray(c.feats)      ? c.feats      : [],
+    conditions:  Array.isArray(c.conditions) ? c.conditions : [],
+    journal:     Array.isArray(c.journal)    ? c.journal    : [],
   }
 }
