@@ -26,7 +26,7 @@
 
 .overview__combat {
   display:     flex;
-  align-items: flex-start;
+  align-items: center;
   gap:         var(--s-gap-md);
 }
 
