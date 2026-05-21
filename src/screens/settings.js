@@ -1,5 +1,31 @@
 import { store } from '../store.js'
 import { loadSkin, applyCustomCSS, clearCustomCSS } from '../skin-loader.js'
+import { data } from '../engine/data/loader.js'
+
+const BACKGROUNDS = [
+  'Acolyte','Charlatan','Criminal','Entertainer','Folk Hero',
+  'Guild Artisan','Hermit','Noble','Outlander','Sage','Sailor','Soldier','Urchin',
+]
+
+const ALIGNMENTS = [
+  'Lawful Good','Neutral Good','Chaotic Good',
+  'Lawful Neutral','True Neutral','Chaotic Neutral',
+  'Lawful Evil','Neutral Evil','Chaotic Evil',
+]
+
+function subclassesFor(className) {
+  return data.subclasses.filter(sc =>
+    sc.class?.name.toLowerCase() === className.toLowerCase()
+  )
+}
+
+function selectOptions(options, current) {
+  return options.map(o => {
+    const val   = typeof o === 'string' ? o : o.name
+    const label = typeof o === 'string' ? o : o.name
+    return `<option value="${val}" ${current === val ? 'selected' : ''}>${label}</option>`
+  }).join('')
+}
 
 const SKINS = [
   { id: 'default',   name: 'Default'   },
@@ -18,15 +44,43 @@ export function render(container) {
           <div class="settings__section-title">Character</div>
           <div style="display:flex;flex-direction:column;gap:var(--s-gap-sm)">
             <label>Name<input id="char-name" type="text" value="${_esc(char.meta.name)}"></label>
-            <label>Class<input id="char-class" type="text" value="${_esc(char.meta.class)}"></label>
-            <label>Subclass<input id="char-subclass" type="text" value="${_esc(char.meta.subclass)}"></label>
-            <label>Race<input id="char-race" type="text" value="${_esc(char.meta.race)}"></label>
-            <label>Background<input id="char-background" type="text" value="${_esc(char.meta.background)}"></label>
-            <label>Alignment<input id="char-alignment" type="text" value="${_esc(char.meta.alignment)}"></label>
+
+            <label>Class
+              <select id="char-class">
+                ${selectOptions(data.classes, char.meta.class)}
+              </select>
+            </label>
+
+            <label>Subclass
+              <select id="char-subclass">
+                <option value="">— none —</option>
+                ${selectOptions(subclassesFor(char.meta.class), char.meta.subclass)}
+              </select>
+            </label>
+
+            <label>Race
+              <select id="char-race">
+                ${selectOptions(data.races, char.meta.race)}
+              </select>
+            </label>
+
+            <label>Background
+              <select id="char-background">
+                ${selectOptions(BACKGROUNDS, char.meta.background)}
+              </select>
+            </label>
+
+            <label>Alignment
+              <select id="char-alignment">
+                ${selectOptions(ALIGNMENTS, char.meta.alignment)}
+              </select>
+            </label>
+
             <label>Level<input id="char-level" type="number" value="${char.meta.level}" min="1" max="20"></label>
             <label>XP<input id="char-xp" type="number" value="${char.meta.xp}" min="0"></label>
             <label>Speed (ft)<input id="char-speed" type="number" value="${char.combat.speed}" min="0" step="5"></label>
             <label>AC<input id="char-ac" type="number" value="${char.combat.ac}" min="1"></label>
+
             <label>Spellcasting ability
               <select id="char-spell-ability">
                 ${['str','dex','con','int','wis','cha'].map(a => `
@@ -34,6 +88,7 @@ export function render(container) {
                 `).join('')}
               </select>
             </label>
+
             <button class="btn btn--accent" id="save-meta">Save</button>
           </div>
         </div>
@@ -105,6 +160,14 @@ function attach(container) {
         .then(() => { store.setActiveSkin(card.dataset.skin); render(container) })
         .catch(err => console.error('Skin load failed:', err))
     })
+  })
+
+  // Subclass dropdown updates live when class changes
+  container.querySelector('#char-class')?.addEventListener('change', e => {
+    const subSel  = container.querySelector('#char-subclass')
+    const subs    = subclassesFor(e.target.value)
+    subSel.innerHTML = `<option value="">— none —</option>` +
+      subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('')
   })
 
   const ghInput  = container.querySelector('#gh-skin-input')
